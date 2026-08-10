@@ -1,0 +1,180 @@
+loaded 210/210 puzzles of partition 'test'
+benchmark: 210 puzzles from sealed partition 'test' of photo_splits.json | model models/digit_cnn.pth | device cuda | mode both
+benchmark mode:   RECOGNITION/SOLVER (ground-truth corners)
+evaluated:        210/210 puzzles  [keypoints 210]
+cells re-sensed:  5552 (constraint-guided re-sensing)
+solver nodes:     mean 22378, max 203287  (node-limit hits: 13)
+definite-cell acc: 11269/11414 (0.9873)
+DIGIT acc (solved): 8749/8888 (0.9844)  <-- number-recognition headline
+empty acc:         2520/2526 (0.9976)
+exact grids:       189/210 (90.0%)  <-- definite cells only
+no-duplicate grids:44/210 (21.0%)  (recognized full grid)
+solve rate:        39/210 (18.6%)  (valid sudoku, bounded correction)
+gt-preserving:     1/210 (0.5%)  (valid AND keeps all GT definite clues)
+candidate-only cells read as digits: 4205/5596 (potential false clues, ignored by exact)
+oracle (candidate cells emptied): 3/164 of the failed puzzles solve GT-preserving (diagnostic, not a metric)
+per-digit accuracy on solved cells: {1: 0.966, 2: 0.988, 3: 0.989, 4: 0.988, 5: 0.984, 6: 0.98, 7: 0.984, 8: 0.992, 9: 0.988}
+wrong-cell confidence: n=145  Case A (conf<0.5): 28  Case B (conf>0.9): 34
+position accuracy (%):
+           c1     c2     c3     c4     c5     c6     c7     c8     c9
+r1       99%   100%    98%   100%   100%    99%    99%    99%    97%
+r2       98%    99%   100%    99%    99%    99%   100%    99%    99%
+r3       99%    99%    98%    99%    99%   100%    98%    99%    99%
+r4       99%    99%    98%    97%    99%    99%    97%    99%    99%
+r5       99%    98%    97%    99%    99%    98%    97%   100%    99%
+r6       99%    99%    99%    99%    98%    99%    99%    99%    99%
+r7       99%    99%    98%    97%   100%    99%   100%    99%    99%
+r8       99%    99%    98%    99%    98%    97%    99%    99%    99%
+r9       99%    97%    98%    99%    99%    99%    99%    99%    96%
+position sample count:
+           c1     c2     c3     c4     c5     c6     c7     c8     c9
+r1       148    144    149    141    139    152    155    135    143
+r2       132    131    142    145    136    144    135    143    149
+r3       127    134    127    148    144    142    145    140    135
+r4       146    140    136    143    135    148    150    136    154
+r5       135    135    130    139    142    147    132    134    144
+r6       138    152    138    141    151    147    135    152    135
+r7       143    136    137    151    155    136    150    148    136
+r8       141    135    129    142    128    155    140    135    146
+r9       142    137    141    140    124    147    146    136    138
+
+00ijckeb5qdc1.webp | definite-cell acc 1.0000 | solved: False
+ground truth (candidate-only cells shown as .):
+5 4 1 7 6 8 2 3 9
+. 7 . 4 3 9 5 6 1
+6 9 3 1 . . 4 7 8
+1 3 . 9 8 . 7 . 6
+9 . 7 6 . 1 8 . 3
+. 8 6 3 . 7 9 1 .
+. . . . 1 6 3 9 7
+3 1 9 . 7 4 6 8 .
+7 6 . 8 9 3 1 . .
+recognized (wrong cells marked *):
+5  4  1  7  6  8  2  3  9 
+2  7  2  4  3  9  5  6  1 
+6  9  3  1  8  8  4  7  8 
+1  3  8  9  8  8  7  8  6 
+9  8  7  6  8  1  8  8  3 
+5  8  6  3  8  7  9  1  8 
+9  8  9  8  1  6  3  9  7 
+3  1  9  8  7  4  6  8  8 
+7  6  8  8  9  3  1  8  8 
+
+0eqjbrpfp5dc1.webp | definite-cell acc 1.0000 | solved: True
+ground truth (candidate-only cells shown as .):
+0 0 4 6 0 9 0 8 0
+0 0 0 0 3 0 5 7 .
+0 0 3 0 0 0 0 4 6
+0 0 2 0 0 0 0 0 0
+0 0 0 8 0 0 1 3 5
+6 0 0 1 0 0 4 2 .
+0 0 0 0 5 1 8 . 2
+0 9 0 0 0 0 0 . .
+0 0 8 0 7 0 0 5 .
+recognized (wrong cells marked *):
+0  0  4  6  0  9  0  8  0 
+0  0  0  0  3  0  5  7  0 
+0  0  3  0  0  0  0  4  6 
+0  0  2  0  0  0  0  0  0 
+0  0  0  8  0  0  1  3  5 
+6  0  0  1  0  0  4  2  8 
+0  0  0  0  5  1  8  9  2 
+0  9  0  0  0  0  0  0  0 
+0  0  8  0  7  0  0  5  0 
+
+saved figure to results/figures/final_bench_recognition.png
+wrote per-cell diagnostics to results/cells/final_cells_recognition.csv (11414 definite cells)
+saved montage: results/figures/final_montage_recognition_empty_to_digit.png (6 cells)
+saved montage: results/figures/final_montage_recognition_1_to_7.png (8 cells)
+saved montage: results/figures/final_montage_recognition_8_ok.png (12 cells)
+saved montage: results/figures/final_montage_recognition_other.png (12 cells)
+benchmark mode:   END-TO-END (auto grid detection)
+evaluated:        184/210 puzzles  [contour 183, lines 1, failed 26]
+grid detection:   184/210 (87.6%)
+cells re-sensed:  5006 (constraint-guided re-sensing)
+solver nodes:     mean 26125, max 205463  (node-limit hits: 18)
+definite-cell acc: 9310/10007 (0.9303)
+DIGIT acc (solved): 7057/7702 (0.9163)  <-- number-recognition headline
+empty acc:         2253/2305 (0.9774)
+exact grids:       134/184 (72.8%)  <-- definite cells only
+no-duplicate grids:34/184 (18.5%)  (recognized full grid)
+solve rate:        29/184 (15.8%)  (valid sudoku, bounded correction)
+gt-preserving:     1/184 (0.5%)  (valid AND keeps all GT definite clues)
+candidate-only cells read as digits: 3572/4897 (potential false clues, ignored by exact)
+oracle (candidate cells emptied): 0/143 of the failed puzzles solve GT-preserving (diagnostic, not a metric)
+per-digit accuracy on solved cells: {1: 0.897, 2: 0.905, 3: 0.911, 4: 0.919, 5: 0.942, 6: 0.913, 7: 0.924, 8: 0.92, 9: 0.912}
+wrong-cell confidence: n=697  Case A (conf<0.5): 132  Case B (conf>0.9): 228
+position accuracy (%):
+           c1     c2     c3     c4     c5     c6     c7     c8     c9
+r1       92%    92%    90%    94%    93%    95%    93%    95%    92%
+r2       94%    94%    93%    94%    93%    94%    95%    94%    93%
+r3       96%    94%    95%    94%    94%    95%    95%    93%    92%
+r4       95%    94%    92%    93%    95%    95%    90%    95%    96%
+r5       93%    93%    92%    94%    94%    91%    92%    95%    96%
+r6       92%    94%    94%    95%    95%    94%    94%    93%    90%
+r7       94%    97%    94%    94%    96%    94%    89%    94%    91%
+r8       94%    95%    91%    97%    91%    89%    93%    90%    90%
+r9       93%    92%    90%    92%    93%    88%    86%    89%    84%
+position sample count:
+           c1     c2     c3     c4     c5     c6     c7     c8     c9
+r1       129    129    133    127    122    135    134    117    128
+r2       115    115    122    125    122    124    118    125    131
+r3       112    120    112    130    126    126    129    123    121
+r4       131    122    121    121    120    131    134    119    137
+r5       121    121    118    124    127    128    115    117    124
+r6       122    131    122    123    130    130    119    134    121
+r7       123    116    122    129    137    119    131    129    117
+r8       124    118    112    125    105    137    123    117    126
+r9       120    119    122    119    108    129    127    121    119
+
+0eqjbrpfp5dc1.webp | definite-cell acc 1.0000 | solved: True
+ground truth (candidate-only cells shown as .):
+0 0 4 6 0 9 0 8 0
+0 0 0 0 3 0 5 7 .
+0 0 3 0 0 0 0 4 6
+0 0 2 0 0 0 0 0 0
+0 0 0 8 0 0 1 3 5
+6 0 0 1 0 0 4 2 .
+0 0 0 0 5 1 8 . 2
+0 9 0 0 0 0 0 . .
+0 0 8 0 7 0 0 5 .
+recognized (wrong cells marked *):
+0  0  4  6  0  9  0  8  0 
+0  0  0  0  3  0  5  7  0 
+0  0  3  0  0  0  0  4  6 
+0  0  2  0  0  0  0  0  0 
+0  0  0  8  0  0  1  3  5 
+6  0  0  1  0  0  4  2  8 
+0  0  0  0  5  1  8  0  2 
+0  9  0  0  0  0  0  0  0 
+0  0  8  0  7  0  0  5  0 
+
+0h7cdk1z19ec1.webp | definite-cell acc 1.0000 | solved: False
+ground truth (candidate-only cells shown as .):
+. 9 . 5 . . . . 8
+. 3 5 . . . . . .
+7 1 8 . 9 . 5 . 6
+. . . . 5 . 3 . .
+3 . 1 7 . . 2 . .
+8 . . . 4 . 1 6 .
+5 . . . . . . . .
+1 . . . 7 5 . . 4
+9 . . . . 2 8 5 .
+recognized (wrong cells marked *):
+2  9  4  5  6  6  7  8  8 
+2  3  5  1  6  9  1  8  2 
+7  1  8  0  9  0  5  8  6 
+6  6  5  6  5  1  3  6  0 
+3  1  1  7  8  8  2  6  6 
+8  6  2  6  4  6  1  6  6 
+5  6  8  1  6  6  9  6  8 
+1  6  6  8  7  5  8  6  4 
+9  7  0  1  0  2  8  5  0 
+
+saved figure to results/figures/final_bench_e2e.png
+wrote per-cell diagnostics to results/cells/final_cells_e2e.csv (10007 definite cells)
+saved montage: results/figures/final_montage_e2e_empty_to_digit.png (12 cells)
+saved montage: results/figures/final_montage_e2e_1_to_7.png (12 cells)
+saved montage: results/figures/final_montage_e2e_7_to_1.png (12 cells)
+saved montage: results/figures/final_montage_e2e_8_ok.png (12 cells)
+saved montage: results/figures/final_montage_e2e_other.png (12 cells)

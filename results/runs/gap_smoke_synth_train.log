@@ -1,0 +1,14 @@
+device: cuda
+generating empty cells (class 0)...
+total 30000 | empty 3000 | synth 9000 | mnist 9000 | emnist 9000
+official test set: mnist 8806 | emnist 2250
+split -> train 25500 | val 4500 (photo val 0)
+epoch 1/3  train acc 0.5847 | val agg 0.7847 | score 0.8179 | emnist=0.613 empty=0.998 mnist=0.721 synth=0.941
+epoch 2/3  train acc 0.8782 | val agg 0.9016 | score 0.9160 | emnist=0.845 empty=0.996 mnist=0.856 synth=0.967
+epoch 3/3  train acc 0.9367 | val agg 0.9289 | score 0.9397 | emnist=0.885 empty=0.998 mnist=0.907 synth=0.970
+saved BEST epoch (score 0.9397) to smoke_gap_synth.pth
+temperature scaling: T = 0.597 (val NLL 0.3441 -> 0.2685)
+saved calibration temperature 0.597 to smoke_gap_synth.pth.temperature.json
+official test accuracy: 0.9065 (MNIST/EMNIST test splits - independent of training)
+  emnist   : 0.8880 (2250 samples)
+  mnist    : 0.9112 (8806 samples)

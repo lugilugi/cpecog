@@ -1,0 +1,85 @@
+loaded 210/210 puzzles of partition 'test'
+benchmark: 210 puzzles from sealed partition 'test' of photo_splits.json | model smoke_gap_synth.pth | device cuda | mode recognition
+benchmark mode:   RECOGNITION/SOLVER (ground-truth corners)
+evaluated:        210/210 puzzles  [keypoints 210]
+cells re-sensed:  5923 (constraint-guided re-sensing)
+solver nodes:     mean 27354, max 400252  (node-limit hits: 24)
+definite-cell acc: 10021/11414 (0.8780)
+DIGIT acc (solved): 7505/8888 (0.8444)  <-- number-recognition headline
+empty acc:         2516/2526 (0.9960)
+exact grids:       144/210 (68.6%)  <-- definite cells only
+no-duplicate grids:37/210 (17.6%)  (recognized full grid)
+solve rate:        33/210 (15.7%)  (valid sudoku, bounded correction)
+gt-preserving:     1/210 (0.5%)  (valid AND keeps all GT definite clues)
+candidate-only cells read as digits: 4938/5596 (potential false clues, ignored by exact)
+oracle (candidate cells emptied): 1/164 of the failed puzzles solve GT-preserving (diagnostic, not a metric)
+per-digit accuracy on solved cells: {1: 0.788, 2: 0.943, 3: 0.77, 4: 0.948, 5: 0.793, 6: 0.926, 7: 0.754, 8: 0.946, 9: 0.741}
+wrong-cell confidence: n=1393  Case A (conf<0.5): 259  Case B (conf>0.9): 511
+position accuracy (%):
+           c1     c2     c3     c4     c5     c6     c7     c8     c9
+r1       90%    87%    87%    91%    92%    88%    88%    89%    85%
+r2       92%    89%    89%    86%    90%    87%    88%    87%    89%
+r3       90%    88%    90%    88%    90%    88%    87%    86%    90%
+r4       86%    86%    90%    87%    87%    89%    85%    85%    85%
+r5       84%    87%    88%    86%    89%    85%    89%    88%    89%
+r6       91%    86%    86%    90%    87%    92%    87%    87%    86%
+r7       91%    90%    87%    87%    88%    88%    85%    85%    85%
+r8       87%    88%    89%    85%    84%    85%    88%    89%    89%
+r9       88%    87%    87%    88%    90%    86%    88%    92%    88%
+position sample count:
+           c1     c2     c3     c4     c5     c6     c7     c8     c9
+r1       148    144    149    141    139    152    155    135    143
+r2       132    131    142    145    136    144    135    143    149
+r3       127    134    127    148    144    142    145    140    135
+r4       146    140    136    143    135    148    150    136    154
+r5       135    135    130    139    142    147    132    134    144
+r6       138    152    138    141    151    147    135    152    135
+r7       143    136    137    151    155    136    150    148    136
+r8       141    135    129    142    128    155    140    135    146
+r9       142    137    141    140    124    147    146    136    138
+
+00ijckeb5qdc1.webp | definite-cell acc 0.3729 | solved: False
+ground truth (candidate-only cells shown as .):
+5 4 1 7 6 8 2 3 9
+. 7 . 4 3 9 5 6 1
+6 9 3 1 . . 4 7 8
+1 3 . 9 8 . 7 . 6
+9 . 7 6 . 1 8 . 3
+. 8 6 3 . 7 9 1 .
+. . . . 1 6 3 9 7
+3 1 9 . 7 4 6 8 .
+7 6 . 8 9 3 1 . .
+recognized (wrong cells marked *):
+8* 4  9* 2* 6  8  2  8* 8*
+2  2* 2  4  8* 8* 8* 6  9*
+6  8* 8* 9* 6  6  4  2* 8 
+9* 8* 8  8* 8  8  9* 8  6 
+8* 8  2* 6  6  9* 8  5  8*
+5  8  6  8* 5  9* 8* 9* 5 
+2  8  2  8  9* 6  8* 8* 9*
+8* 9* 8* 8  9* 4  6  8  8 
+7  6  6  8  8* 8* 9* 8  5 
+
+0eqjbrpfp5dc1.webp | definite-cell acc 1.0000 | solved: True
+ground truth (candidate-only cells shown as .):
+0 0 4 6 0 9 0 8 0
+0 0 0 0 3 0 5 7 .
+0 0 3 0 0 0 0 4 6
+0 0 2 0 0 0 0 0 0
+0 0 0 8 0 0 1 3 5
+6 0 0 1 0 0 4 2 .
+0 0 0 0 5 1 8 . 2
+0 9 0 0 0 0 0 . .
+0 0 8 0 7 0 0 5 .
+recognized (wrong cells marked *):
+0  0  4  6  0  9  0  8  0 
+0  0  0  0  3  0  5  7  0 
+0  0  3  0  0  0  0  4  6 
+0  0  2  0  0  0  0  0  0 
+0  0  0  8  0  0  1  3  5 
+6  0  0  1  0  0  4  2  8 
+0  0  0  0  5  1  8  4  2 
+0  9  0  0  0  0  0  0  0 
+0  0  8  0  7  0  0  5  0 
+
+saved figure to bench_gap_synth_recognition.png

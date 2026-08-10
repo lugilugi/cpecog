@@ -1,0 +1,10 @@
+# Large data artifacts (never commit; regenerate/download instead)
+emnist/
+data/
+mnist/
+cpecog_extracted/
+__pycache__/
+*.pyc
+
+# Local tool config
+opencode.json

@@ -1,0 +1,237 @@
+[ WARN:0@4.993] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\ch9bnu6a160d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@4.996] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\nm3w7gbidqcc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@4.996] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\wutf5yqip7dc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@4.996] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\yahxcrf6w4ac1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@4.997] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\n75manw3aszc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@4.997] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\9d4rrpmsuvec1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@4.997] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\2oc6i0jf980d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@4.998] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\bn1i6x4xknzc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@4.998] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\sgu0ibzw361d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@4.998] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\l7zw8i9ey2ac1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@4.998] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\4b11b2vfrn0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@4.999] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\z79absl9qgcc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@4.999] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\o9ffz2wglsec1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@4.999] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\0sqlzqmia10d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@4.999] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\hf55pqj0nqzc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.000] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\kqWVvZ_g3pemSov5Crh8jdaAvq-SqZ1aykHNI2Rq9Ws.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.000] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\p792glj7xlac1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.000] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\dljw697zfodc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.000] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\5evvatm784ec1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.001] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\m12he0twtm0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.001] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\vybjvuecvd0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.001] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\d8h70cm1osec1.png'): can't open/read file: check file path/integrity
+[ WARN:0@5.001] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\14tjkum7dxzc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.002] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\g8m8751r1w0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.002] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\mqec6cb3dm0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.002] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\qbra84ztdvcc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.002] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\fsmms3sdaiec1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.003] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\nrll0t0tcq8c1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.003] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\xz5abx73qbdc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.003] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\jfqx1mv9stcc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.003] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\sgto78tmw8bc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.004] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\4qss4e28fs0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.004] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\6afxp9u0ke0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.004] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\ut4ma9cxa8ac1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.004] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\8d1ncglipu8c1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.005] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\c1sbb2y6z11d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.005] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\ohl7t2p56h8c1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.005] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\jcz0rw5z6o8c1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.005] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\xkz97rm8wncc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.006] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\3itvx1le030d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.006] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\tg7nhvqd9j0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.006] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\iat72ps1k5fc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.006] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\blkdb560js0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.007] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\v78yws64cuec1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.007] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\aga4jujqn1ac1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.007] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\hllk1eul7ozc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.007] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\pn4dgdro870d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.008] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\i610r79pck8c1.jpeg'): can't open/read file: check file path/integrity
+[ WARN:0@5.008] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\pkr9jzvumr0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.008] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\k26kolm0b01d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.008] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\qzqhhqdfzxzc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.008] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\hwthrt5zv5cc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.009] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\l519z0l2ff0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.009] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\1tovw2sbv6fc1.jpeg'): can't open/read file: check file path/integrity
+[ WARN:0@5.009] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\5tokdvsguy0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.010] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\q2counof1y8c1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.010] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\yr3koumkxszc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.010] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\a2mbezfaswzc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.010] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\pmxowa2odf0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.011] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\zmolvi2fq01d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.011] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\kw3rmdyme71d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.011] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\ctryj1nl01ac1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.012] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\0s1zegjcj8bc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.012] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\cee84vtyskac1.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@5.012] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\pjlx823hg31d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.012] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\zpjo4su9ik0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.012] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\94ho2jczlo0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.013] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\1b7i4wkwuu0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.013] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\zlfqmmbqp8dc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.014] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\g5jb26padrzc1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.014] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\zmuvlxab989c1.jpeg'): can't open/read file: check file path/integrity
+[ WARN:0@5.014] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\wqt39hgqez0d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.015] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\wl0bnrxvaz8c1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.015] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\o1k9np08690d1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.015] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\iby5t6fxt3ac1.webp'): can't open/read file: check file path/integrity
+[ WARN:0@5.015] global loadsave.cpp:278 cv::findDecoder imread_('benchmark_data/hf_test_sample\images\l910gaxtcr0d1.webp'): can't open/read file: check file path/integrity
+skip unreadable image: ch9bnu6a160d1.webp
+skip unreadable image: nm3w7gbidqcc1.webp
+skip unreadable image: wutf5yqip7dc1.webp
+skip unreadable image: yahxcrf6w4ac1.webp
+skip unreadable image: n75manw3aszc1.webp
+skip unreadable image: 9d4rrpmsuvec1.webp
+skip unreadable image: 2oc6i0jf980d1.webp
+skip unreadable image: bn1i6x4xknzc1.webp
+skip unreadable image: sgu0ibzw361d1.webp
+skip unreadable image: l7zw8i9ey2ac1.webp
+skip unreadable image: 4b11b2vfrn0d1.webp
+skip unreadable image: z79absl9qgcc1.webp
+skip unreadable image: o9ffz2wglsec1.webp
+skip unreadable image: 0sqlzqmia10d1.webp
+skip unreadable image: hf55pqj0nqzc1.webp
+skip unreadable image: kqWVvZ_g3pemSov5Crh8jdaAvq-SqZ1aykHNI2Rq9Ws.webp
+skip unreadable image: p792glj7xlac1.webp
+skip unreadable image: dljw697zfodc1.webp
+skip unreadable image: 5evvatm784ec1.webp
+skip unreadable image: m12he0twtm0d1.webp
+skip unreadable image: vybjvuecvd0d1.webp
+skip unreadable image: d8h70cm1osec1.png
+skip unreadable image: 14tjkum7dxzc1.webp
+skip unreadable image: g8m8751r1w0d1.webp
+skip unreadable image: mqec6cb3dm0d1.webp
+skip unreadable image: qbra84ztdvcc1.webp
+skip unreadable image: fsmms3sdaiec1.webp
+skip unreadable image: nrll0t0tcq8c1.webp
+skip unreadable image: xz5abx73qbdc1.webp
+skip unreadable image: jfqx1mv9stcc1.webp
+skip unreadable image: sgto78tmw8bc1.webp
+skip unreadable image: 4qss4e28fs0d1.webp
+skip unreadable image: 6afxp9u0ke0d1.webp
+skip unreadable image: ut4ma9cxa8ac1.webp
+skip unreadable image: 8d1ncglipu8c1.webp
+skip unreadable image: c1sbb2y6z11d1.webp
+skip unreadable image: ohl7t2p56h8c1.webp
+skip unreadable image: jcz0rw5z6o8c1.webp
+skip unreadable image: xkz97rm8wncc1.webp
+skip unreadable image: 3itvx1le030d1.webp
+skip unreadable image: tg7nhvqd9j0d1.webp
+skip unreadable image: iat72ps1k5fc1.webp
+skip unreadable image: blkdb560js0d1.webp
+skip unreadable image: v78yws64cuec1.webp
+skip unreadable image: aga4jujqn1ac1.webp
+skip unreadable image: hllk1eul7ozc1.webp
+skip unreadable image: pn4dgdro870d1.webp
+skip unreadable image: i610r79pck8c1.jpeg
+skip unreadable image: pkr9jzvumr0d1.webp
+skip unreadable image: k26kolm0b01d1.webp
+skip unreadable image: qzqhhqdfzxzc1.webp
+skip unreadable image: hwthrt5zv5cc1.webp
+skip unreadable image: l519z0l2ff0d1.webp
+skip unreadable image: 1tovw2sbv6fc1.jpeg
+skip unreadable image: 5tokdvsguy0d1.webp
+skip unreadable image: q2counof1y8c1.webp
+skip unreadable image: yr3koumkxszc1.webp
+skip unreadable image: a2mbezfaswzc1.webp
+skip unreadable image: pmxowa2odf0d1.webp
+skip unreadable image: zmolvi2fq01d1.webp
+skip unreadable image: kw3rmdyme71d1.webp
+skip unreadable image: ctryj1nl01ac1.webp
+skip unreadable image: 0s1zegjcj8bc1.webp
+skip unreadable image: cee84vtyskac1.jpg
+skip unreadable image: pjlx823hg31d1.webp
+skip unreadable image: zpjo4su9ik0d1.webp
+skip unreadable image: 94ho2jczlo0d1.webp
+skip unreadable image: 1b7i4wkwuu0d1.webp
+skip unreadable image: zlfqmmbqp8dc1.webp
+skip unreadable image: g5jb26padrzc1.webp
+skip unreadable image: zmuvlxab989c1.jpeg
+skip unreadable image: wqt39hgqez0d1.webp
+skip unreadable image: wl0bnrxvaz8c1.webp
+skip unreadable image: o1k9np08690d1.webp
+skip unreadable image: iby5t6fxt3ac1.webp
+skip unreadable image: l910gaxtcr0d1.webp
+benchmark: 24 puzzles from HF folder benchmark_data/hf_test_sample | model digit_cnn_smoke_v5.pth | device cuda | mode recognition
+benchmark mode:   RECOGNITION/SOLVER (ground-truth corners)
+evaluated:        24/24 puzzles  [keypoints 24]
+cells re-sensed:  616 (constraint-guided re-sensing)
+solver nodes:     mean 28656, max 200299  (node-limit hits: 3)
+definite-cell acc: 1337/1367 (0.9781)
+DIGIT acc (solved): 907/936 (0.9690)  <-- number-recognition headline
+empty acc:         430/431 (0.9977)
+exact grids:       20/24 (83.3%)  <-- definite cells only
+no-duplicate grids:5/24 (20.8%)  (recognized full grid)
+solve rate:        5/24 (20.8%)  (valid sudoku, bounded correction)
+gt-preserving:     0/24 (0.0%)  (valid AND keeps all GT definite clues)
+candidate-only cells read as digits: 478/577 (potential false clues, ignored by exact)
+oracle (candidate cells emptied): 0/17 of the failed puzzles solve GT-preserving (diagnostic, not a metric)
+per-digit accuracy on solved cells: {1: 0.96, 2: 0.99, 3: 0.968, 4: 0.957, 5: 0.991, 6: 0.942, 7: 0.984, 8: 0.971, 9: 0.954}
+wrong-cell confidence: n=30  Case A (conf<0.5): 16  Case B (conf>0.9): 3
+position accuracy (%):
+           c1     c2     c3     c4     c5     c6     c7     c8     c9
+r1      100%   100%   100%   100%    94%   100%   100%   100%   100%
+r2      100%   100%   100%   100%   100%    94%   100%   100%   100%
+r3       94%    95%   100%   100%   100%   100%    88%   100%    94%
+r4       95%    90%   100%   100%    94%   100%   100%   100%    94%
+r5       93%   100%   100%   100%   100%   100%   100%    94%   100%
+r6       94%    93%   100%   100%   100%    88%    94%   100%   100%
+r7      100%   100%    95%   100%   100%   100%   100%    95%   100%
+r8       95%    93%   100%    93%   100%   100%    88%   100%   100%
+r9      100%   100%    93%   100%   100%   100%   100%    90%    93%
+position sample count:
+           c1     c2     c3     c4     c5     c6     c7     c8     c9
+r1        18     18     16     18     18     17     16     16     19
+r2        17     17     18     15     18     17     20     18     14
+r3        16     20     14     18     19     19     16     18     17
+r4        19     20     17     20     16     16     16     18     17
+r5        15     16     15     18     17     14     18     16     19
+r6        16     14     15     18     15     16     16     16     16
+r7        17     18     19     18     19     19     17     19     16
+r8        19     15     16     15     15     19     17     15     17
+r9        17     14     14     16     16     14     16     20     14
+
+3bor2sty6q0d1.webp | definite-cell acc 0.8395 | solved: False
+ground truth (candidate-only cells shown as .):
+1 7 5 6 9 4 3 2 8
+4 0 0 0 0 5 9 1 6
+9 6 0 1 3 0 4 5 7
+2 0 4 0 6 1 5 7 9
+6 1 7 0 5 9 8 0 2
+5 9 0 2 0 0 6 0 1
+3 2 1 5 8 6 7 9 4
+8 5 9 0 0 0 1 6 3
+7 4 6 9 1 3 2 8 5
+recognized (wrong cells marked *):
+1  7  5  6  2* 4  3  2  8 
+4  0  0  0  0  5  9  1  6 
+7* 7* 0  1  3  0  5* 5  7 
+4* 0  4  0  3* 1  5  7  2*
+6  1  7  0  5  9  8  0  2 
+7* 2* 0  2  0  0  5* 0  1 
+3  2  1  5  8  6  7  2* 4 
+9* 5  9  0  0  0  7* 6  3 
+7  4  6  9  1  3  2  8  5 
+
+w9y7j9hnxszc1.webp | definite-cell acc 1.0000 | solved: False
+ground truth (candidate-only cells shown as .):
+6 8 . 0 9 0 . . 3
+. 9 0 6 5 . 8 2 .
+. 5 . . . 7 6 9 0
+0 7 1 . 6 . 0 8 9
+0 2 0 . 0 8 0 0 0
+. 0 . 3 0 . 2 0 0
+0 . 0 0 0 0 4 . 2
+0 . 0 . . 6 . 7 8
+2 0 0 0 0 0 . 1 .
+recognized (wrong cells marked *):
+6  8  2  0  9  0  5  5  3 
+4  9  0  6  5  5  8  2  7 
+5  5  4  9  5  7  6  9  0 
+0  7  1  2  6  2  0  8  9 
+0  2  0  6  0  8  0  0  0 
+9  0  9  3  0  6  2  0  0 
+0  2  0  0  0  0  4  6  2 
+0  5  0  4  4  6  6  7  8 
+2  0  0  0  0  0  6  1  6 
+
+saved figure to fix_recognition_recognition.png
+wrote per-cell diagnostics to fix_cells_recognition_recognition.csv (1367 definite cells)
