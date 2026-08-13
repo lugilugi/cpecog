@@ -73,8 +73,13 @@ photo ──► grid detection (contour → line-based quad)          [sudoku_co
 | Computer vision | `sudoku_core.py` | Grid detection, perspective warp, cell extraction, solver engine |
 | Learning | `digit_cnn.py` | Preprocessing pipeline, CNN, training, calibration, synthetic data generation |
 | Evaluation & training | `benchmark.py`, `train_local.py`, `photo_data.py`, `sudoku_cnn_colab.ipynb` | Labeled benchmarking (recognition and end-to-end modes), local and Colab training, sealed photo splits |
+| Deployment | `live_solver.py` | Real-time GUI: live camera / uploaded-image solving with the same pipeline |
 
 The single most important architectural decision is that **training data and inference share the exact same cell-preprocessing code path** (Section 5.4): every synthetic, handwritten, and real-photo training sample is passed through the same `preprocess_cell` function the deployed system uses. This removes the classic train/inference skew that silently degrades deployed classifiers.
+
+### 3.1 The live application
+
+The pipeline is deployed as a real-time Tkinter GUI (`live_solver.py`): point a webcam at a printed puzzle — or upload a photo — and the app solves it live, roughly 3–4 passes per second. Three background threads keep the UI responsive: the model loads on one (weights plus the temperature sidecar, off the UI thread), capture runs on a second (DirectShow on Windows — MSMF leaks frame buffers with some drivers), and solving on a third with a **busy-gate** that guarantees at most one frame is in flight or pending, so the queue can never pile up while a slow pass runs. The preview overlays the detection result directly on the photo: the green quad is the detected grid, **white digits are recognized givens, yellow digits are cells the solver filled** — both drawn at the true bilinear cell centers of the warp. The side panel shows the Recognized and Solution 9×9 grids in 3×3 boxes, populated row-major so every label lines up with the overlay cell-for-cell. This "recognition painted on the photo" view is also an honest diagnostic: what the CNN actually read is visible at every cell — including its errors — instead of being hidden behind the printed digits. A `--smoke` flag solves one sample image and exits 0/1, giving the whole pipeline a CI-able health check.
 
 ## 4. Evaluation Methodology
 
@@ -122,6 +127,8 @@ This section is the technique spine of the project. For every stage it lists the
 **Primitive alternative.** Global thresholding (Otsu's method — a single threshold chosen to minimize intra-class variance). One threshold cannot serve a page lit unevenly: shadows darken parts of digits below the threshold or brighten grid lines above it.
 
 **Chosen.** Adaptive Gaussian thresholding (block 15, constant 7, inverted): a per-pixel threshold computed from a local window, which follows shading across the cell. A global Otsu pass survives **only** as a degeneracy gate — used solely when adaptive thresholding is clearly degenerate (washed-out, low-contrast cell: < 0.5% ink *and* blur std > 18). The two thresholds are never compared on ink fraction, so the fallback cannot silently replace a working adaptive result.
+
+**Mechanics of the comparisons.** Each pixel's threshold is the mean of its local 15×15 Gaussian window minus a constant 7, inverted to make ink white-on-black; a large window with a small constant keeps the threshold following gentle shading while sitting well below the ink. The degeneracy gate is a pair of statistical comparisons over the *adaptive output and the blurred input*: if the thresholded foreground fraction falls below 0.5% (virtually no ink survived) **and** the blurred cell's intensity spread (std) exceeds 18 (the cell is contrasty rather than uniform — so the missing ink is a threshold failure, not a genuinely blank cell), the adaptive result is declared degenerate and Otsu's output replaces it **unconditionally**. The two thresholds are deliberately never compared against each other on ink fraction: the legacy pipeline compared them (`otsu_ink > adaptive_ink` ⇒ use Otsu), which let a degenerate global result silently clobber a working adaptive one on borderline cells. Downstream, the same comparison discipline repeats in the cleanup rules (Section 5.3): every removal decision is a shape statistic compared against a measured threshold (area/length < 6 px, aspect > 4, spans ≥ 70%, fractions of the full cell), all derived from the benchmark's error montages.
 
 **Tried → found.** The legacy pipeline did not actually use a pure global threshold: it ran adaptive thresholding and then *retried with Otsu whenever Otsu's ink fraction exceeded adaptive's*. That ink-fraction comparison was the defect — on borderline cells a degenerate global result could silently replace a working adaptive one. The first redesign removed the comparison entirely, leaving Otsu as the pure degeneracy gate described above. A later idea — *retry with Otsu when a digit vanishes* — was implemented, measured, and **reverted**: it fixed 0 of the 7→0 cells and invented a false digit on an empty cell. The lost 7s are erased at the threshold/margin level, and no second global threshold can recover what adaptive thresholding already destroyed.
 
@@ -348,6 +355,13 @@ This section is the plan for the document's illustrative comparisons, current st
 | F9 | The P2 parameter sweep (margin/empty/corner): definite accuracy + exact grids | `make_narrative_figures.py` | **[new] generated** — `narrative_figures/fig_f9_margin_sweep.png` |
 | F10 | Confusion matrix on the final run's definite cells (counts + recall) | `tools/final_metrics_figures.py` | **[new] generated** — `narrative_figures/fig_f10_confusion_matrix.png` |
 | F11 | Per-position accuracy + sample-count heatmaps on the sealed test | `tools/final_metrics_figures.py` | **[new] generated** — `narrative_figures/fig_f11_position_heatmaps.png` |
+| R1 | Global vs adaptive thresholding on the same cells (synthetic shaded + real photo), with the degeneracy-gate statistics | `tools/make_reference_figures.py` | **[new] generated** — `narrative_figures/ref_r1_thresholding_compare.png` |
+| R2 | Temperature scaling: fitted NLL(T) curve (photo val) + reliability diagram pre/post calibration (sealed test cells, ECE) | `tools/make_reference_figures.py` | **[new] generated** — `narrative_figures/ref_r2_calibration_reliability.png` |
+| R3 | Training history from the final checkpoint: train/val loss + validation curves, best epoch + early-stopping patience window | `tools/make_reference_figures.py` | **[new] generated** — `narrative_figures/ref_r3_training_history.png` |
+| R4 | DigitCNN architecture schematic (double-conv 32→64→128 + GAP head) with real parameter counts | `tools/make_reference_figures.py` | **[new] generated** — `narrative_figures/ref_r4_cnn_architecture.png` |
+| R5 | Augmentation grid: one digit under every augmentation, each through the shared preprocessing path | `tools/make_reference_figures.py` | **[new] generated** — `narrative_figures/ref_r5_augmentation_grid.png` |
+| R6 | Training-source volumes + naive vs balanced (WeightedRandomSampler) source shares | `tools/make_reference_figures.py` | **[new] generated** — `narrative_figures/ref_r6_data_balance.png` |
+| R7 | Class-0 training data: synthetic empties vs real photo empties with full-population purity statistics | `tools/make_reference_figures.py` | **[new] generated** — `narrative_figures/ref_r7_empty_cells_synth_vs_real.png` |
 
 ![F2 — Same cells through all three pipeline generations](narrative_figures/fig_f2_pipeline_generations.png)
 
@@ -389,6 +403,38 @@ This section is the plan for the document's illustrative comparisons, current st
 
 *Figure F9. The P2 parameter sweep (same low-epoch model, 24-puzzle sample): definite-cell accuracy (bars) and exact grids (red line) for margin 0.04–0.12, the empty-threshold alternative, and corner-span 0.3. Margin 0.10 (orange) is the measured optimum — 96.34% definite accuracy and 20/24 exact grids.*
 
+### 8.3 Reference figures (intro-ML teaching support)
+
+The figures below explain the classical techniques and machine-learning concepts the project relies on, with real project data. They are intended as support material for the course write-up (Section 5).
+
+![R1 — Global vs adaptive thresholding](narrative_figures/ref_r1_thresholding_compare.png)
+
+*Figure R1 (Section 5.2). The core thresholding lesson: one global threshold (Otsu) cannot follow shading across a cell. Top row — a rendered digit under a synthetic left-dark → right-bright gradient: Otsu loses the digit on the dark side while adaptive thresholding (per-pixel threshold from a local 15×15 window) recovers it. Middle/bottom rows — the same comparison on real photo cells. The right column shows the degeneracy gate's verdict and statistics: Otsu is only trusted when the adaptive output is clearly degenerate (ink fraction < 0.5% AND blur std > 18).*
+
+![R2 — Temperature scaling and reliability](narrative_figures/ref_r2_calibration_reliability.png)
+
+*Figure R2 (Section 5.6). Left: the fitted NLL(T) curve for temperature scaling — the sidecar T = 1.162 matches the NLL optimum on the photo validation pack. Right: a reliability diagram on the sealed-test cells (the deployment distribution): confidence-binned accuracy vs confidence. Points above the diagonal are overconfident predictions — a wrong cell with confidence > 0.9 is a *structured* failure, because the correction search will never revisit it. ECE is reported for both raw and scaled softmaxes.*
+
+![R3 — Training history](narrative_figures/ref_r3_training_history.png)
+
+*Figure R3 (Sections 5.5, 6.6). The final model's training history from the Colab checkpoint (19 epochs recorded): train/validation loss, validation accuracy, and the selection score, with the best epoch (weights saved) and the 5-epoch early-stopping patience window marked. The selection score is the mean of per-source accuracies — photo accuracy is tracked separately since the deployment domain is photos.*
+
+![R4 — CNN architecture](narrative_figures/ref_r4_cnn_architecture.png)
+
+*Figure R4 (Section 5.5). The DigitCNN architecture: two Conv3×3–BN–ReLU blocks per stage (32 → 64 → 128 channels) with MaxPool2 between stages, then a global-average-pooling head (1×1) followed by Dropout and a 128→10 linear layer. Everything before the head is fully convolutional, so there is no positional bias and no fixed input size; the head is ~1.3k parameters versus ~46k for the old flatten head. 81 cells → 81×10 softmaxes → argmax per cell → 9×9 recognized grid.*
+
+![R5 — Augmentation grid](narrative_figures/ref_r5_augmentation_grid.png)
+
+*Figure R5 (Section 5.4). One rendered digit under every augmentation used in training — shift ±2 px, rotation ±8°, blur, brightness, noise, print-weight erosion, zoom — each applied to the RAW cell and then pushed through the same `preprocess_cell` the deployed system uses. Training and inference share this exact code path (the train/inference symmetry that makes the augmentation effective).*
+
+![R6 — Data balance](narrative_figures/ref_r6_data_balance.png)
+
+*Figure R6 (Section 5.4). Left: raw training-source volumes (log scale) — EMNIST alone is ~61% of the pool. Right: the naive share each source would have per batch versus the equal weighting enforced by the source-balanced `WeightedRandomSampler`, which keeps any single source from dominating the gradient.*
+
+![R7 — Synthetic vs real empties](narrative_figures/ref_r7_empty_cells_synth_vs_real.png)
+
+*Figure R7 (Sections 5.3, 5.4). The class-0 (empty cell) training data: real photo empties as the CNN sees them versus synthetic empties. The synthetic generator is calibrated to the measured real appearance — across all validation empties, the large majority are pure black, and the few survivors carry thin line fragments at 5–15% ink (examples shown in the top row).*
+
 ## 9. Discussion and Lessons
 
 1. **The evaluation loop drives the design.** Every preprocessing rule in P2 came from studying the benchmark's error montages, and every claim in this document is a benchmark number — the project has no unmeasured opinions.
@@ -429,6 +475,9 @@ This section is the plan for the document's illustrative comparisons, current st
 | `emnist/emnist_packed.npz` | versioned EMNIST cache (official train/test separate) | §5.4 |
 | `models/*.temperature.json` | fitted temperatures, auto-loaded | §5.6 |
 | `narrative_figures/` | figures F2, F3, F4a, F6–F9 + `t1_metrics.json` | §8 |
+| `narrative_figures/ref_r*.png` | intro-ML reference figures R1–R7 (thresholding, calibration, training history, architecture, augmentation, data balance, empties) | §8.3 |
+| `emnist/photo_packed_test.npz` | sealed-test definite-cell cache (11,414 cells) — built by `make_reference_figures.py` via `photo_data.build_photo_cells("test")` | §5.6, R2 |
+| `live_solver.py` | real-time GUI deployment of the pipeline (camera/upload, overlay + panels, `--smoke` health check) | §3.1 |
 
 ---
 
