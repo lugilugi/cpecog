@@ -83,23 +83,37 @@ The pipeline is deployed as a real-time Tkinter GUI (`live_solver.py`): point a 
 
 ### 3.2 A visual walkthrough of the pipeline
 
-The figure below is a code tour: one real photograph (`benchmark_data/hf_test_sample`) run through the *actual* pipeline functions, with each panel showing what the image looks like at that stage and naming the code that produced it. Regenerate it for any photo with `python tools/make_pipeline_walkthrough.py --image <path> [--out <name>]` (exits nonzero if the grid is not detected — no ground-truth fallback, matching the honest end-to-end convention).
+The sequence below is a code tour: one real photograph (`benchmark_data/hf_test_sample`) run through the *actual* pipeline functions, one image per step transition — each shows the before (previous step's output) on the left and the after (this step's output) on the right, with the code that performs the transition. Regenerate for any photo with `python tools/make_pipeline_walkthrough.py --image <path> [--out <prefix>]` (exits nonzero if the grid is not detected — no ground-truth fallback, matching the honest end-to-end convention).
 
-![Visual pipeline walkthrough](narrative_figures/fig_walkthrough_pipeline.png)
+![W1 — detection](narrative_figures/fig_walkthrough_01_detect.png)
 
-*Figure W1. A real photo through every pipeline stage: detected quad → perspective warp → 81 extracted cells → per-cell preprocessing strips with diagnostics → recognized grid + confidence heatmap → solution → the deployed overlay.*
+*Figure W1 (Step 1 → 2). Grid detection — `detect_grid_contour()` (sudoku_core.py:27). Left: the photo plus the thresholded detection map the contour search runs on; right: the detected quad (adaptive threshold → morphological close → largest 4-point contour) overlaid on the photo.*
 
-| Panel | Code | What to look for |
-|---|---|---|
-| 1 — Input + quad | `detect_grid_contour()` (sudoku_core.py:27) | The green quad: adaptive threshold (block 15, constant 5, inverted) → morphological close → largest external contour → 4-point approximation. The detection map beside it is the thresholded image the contour search runs on |
-| 2 — Warp | `four_point_transform()` (sudoku_core.py:19) | The flat 600×600 top-down grid produced from the quad corners (`order_points` + perspective transform) — the photo's perspective is removed here |
-| 3 — Cells | `extract_cells()` (sudoku_core.py:103) | The 9×9 mosaic of the 81 row-major cells, cut at *fractional* boundaries (`i·h/9` rounded) so every pixel of the warp is used |
-| 4 — Preprocessing strips | `preprocess_cell_stats()` (digit_cnn.py:912) | Two representative cells through the five exposed stages — raw → Gaussian blur → adaptive threshold → shape cleanup → letterboxed 48×48 input — with a diagnostics bar under each |
-| 5 — Recognition | `predict_cells_probs()` (digit_cnn.py:442) | The recognized 9×9 (argmax of the 81×10 softmax, temperature-scaled) plus a per-cell confidence heatmap |
-| 6 — Solution | `solve_with_resensing()` (sudoku_core.py) | The completed grid — dark cells are recognized givens, teal cells are solver fills — with node count and re-sense count |
-| 7 — Deployed overlay | `annotate_frame()` (live_solver.py:61) | The live-app look: white = recognized givens, yellow = solver-filled cells, painted on the original photo |
+![W2 — warp](narrative_figures/fig_walkthrough_02_warp.png)
 
-**Reading the diagnostics bars** (panel 4): each strip's footer lists the per-cell statistics the cleanup rules are built on. `th_ink` is the thresholded foreground fraction *before* cleanup; `comps` is the number of connected components after the margin strip; `largest` is the biggest component's share of the cell; `tiny/grid/corner` are the shape-rule removal counts; `merged` flags a split-stroke bridge. The empty-cell strip shows the cleanup's job directly: it *starts* with 16% raw fragment ink (threshold artifact of the printed grid lines) and *ends* as a black 48×48 input — the CNN is told "empty", not shown fragments. The digit strip keeps its ink end-to-end. Section 5.2/5.3 explain why each of these statistics exists; this figure shows them on real data.
+*Figure W2 (Step 2 → 3). Perspective warp — `four_point_transform()` (sudoku_core.py:19). `order_points()` canonicalizes the corners, then `getPerspectiveTransform` maps them onto a flat 600×600 square — the photo's perspective is removed here.*
+
+![W3 — cells](narrative_figures/fig_walkthrough_03_cells.png)
+
+*Figure W3 (Step 3 → 4). Cell extraction — `extract_cells()` (sudoku_core.py:103). The 81 row-major cells (cell 0 top-left), cut at fractional boundaries (`i·h/9` rounded) so every pixel of the warp is used.*
+
+![W4 — preprocessing](narrative_figures/fig_walkthrough_04_preprocess.png)
+
+*Figure W4 (Step 4 → 5). Per-cell preprocessing — `preprocess_cell_stats()` (digit_cnn.py:912). Left: the two representative cells the strips are built from (a digit and an empty); right: each through the five exposed stages — raw → Gaussian blur → adaptive threshold → shape cleanup → letterboxed 48×48 input — with the diagnostics bar below each strip.*
+
+![W5 — recognition](narrative_figures/fig_walkthrough_05_recognize.png)
+
+*Figure W5 (Step 5 → 6). Recognition — `predict_cells_probs()` (digit_cnn.py:442). The 81 cells → 81×10 temperature-scaled softmax → argmax per cell → the recognized 9×9 grid.*
+
+![W6 — solution](narrative_figures/fig_walkthrough_06_solve.png)
+
+*Figure W6 (Step 6 → 7). Solving — `solve_with_resensing()` confidence-aware correction search. Dark digits are recognized givens, teal digits are solver fills; the node count is the corruption diagnostic (a node explosion means recognition corrupted the puzzle).*
+
+![W7 — overlay](narrative_figures/fig_walkthrough_07_overlay.png)
+
+*Figure W7 (Step 7 → 8). Deployed overlay — `annotate_frame()` (live_solver.py:61). The live-app look painted on the original photo: white = recognized givens, yellow = solver-filled cells, at the true cell centers.*
+
+**Reading the diagnostics bars** (W4): each strip's footer lists the per-cell statistics the cleanup rules are built on. `th_ink` is the thresholded foreground fraction *before* cleanup; `comps` is the number of connected components after the margin strip; `largest` is the biggest component's share of the cell; `tiny/grid/corner` are the shape-rule removal counts; `merged` flags a split-stroke bridge. The empty-cell strip shows the cleanup's job directly: it *starts* with 16% raw fragment ink (threshold artifact of the printed grid lines) and *ends* as a black 48×48 input — the CNN is told "empty", not shown fragments. The digit strip keeps its ink end-to-end. Sections 5.2/5.3 explain why each of these statistics exists; this walkthrough shows them on real data.
 
 ## 4. Evaluation Methodology
 
@@ -498,7 +512,7 @@ The figures below explain the classical techniques and machine-learning concepts
 | `narrative_figures/ref_r*.png` | intro-ML reference figures R1–R7 (thresholding, calibration, training history, architecture, augmentation, data balance, empties) | §8.3 |
 | `emnist/photo_packed_test.npz` | sealed-test definite-cell cache (11,414 cells) — built by `make_reference_figures.py` via `photo_data.build_photo_cells("test")` | §5.6, R2 |
 | `live_solver.py` | real-time GUI deployment of the pipeline (camera/upload, overlay + panels, `--smoke` health check) | §3.1 |
-| `narrative_figures/fig_walkthrough_pipeline.png` + `tools/make_pipeline_walkthrough.py` | the §3.2 visual code tour: one photo through every pipeline stage with per-stage diagnostics | §3.2 |
+| `narrative_figures/fig_walkthrough_0*.png` + `tools/make_pipeline_walkthrough.py` | the §3.2 visual code tour: one photo through every pipeline step transition (W1–W7) with per-stage diagnostics | §3.2 |
 
 ---
 

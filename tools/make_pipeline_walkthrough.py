@@ -1,20 +1,23 @@
-"""Generate the visual pipeline walkthrough figure (CAPSTONE_NARRATIVE.md §3.2).
+"""Generate the visual pipeline walkthrough figures (CAPSTONE_NARRATIVE.md §3.2).
 
 Runs ONE real photo through the ACTUAL pipeline functions (no
-reimplementation) and renders a labeled montage showing what the image looks
-like at every stage:
+reimplementation) and renders ONE image per step TRANSITION, each showing
+the before (output of the previous step) and the after (output of this
+step), with the code that performs the transition:
 
-  fig_walkthrough_pipeline.png (narrative_figures/)
-    A  Input photo + detected quad (detect_grid_contour) + detection map
-    B  Perspective warp (four_point_transform) + 9x9 cell mosaic (extract_cells)
-    C  Per-cell preprocessing strips (preprocess_cell_stats): raw -> blur ->
-       adaptive threshold -> shape cleanup -> letterboxed 48x48 input, with
-       the per-cell diagnostics (threshold path, ink fractions, removals)
-    D  Recognition (predict_cells_probs + temperature): recognized 9x9 +
-       per-cell confidence heatmap
-    E  Solution (solve_with_resensing) + the deployed live-app overlay
+  narrative_figures/fig_walkthrough_01_detect.png     photo -> detected quad
+  narrative_figures/fig_walkthrough_02_warp.png       quad -> perspective warp
+  narrative_figures/fig_walkthrough_03_cells.png      warp -> 81 row-major cells
+  narrative_figures/fig_walkthrough_04_preprocess.png cells -> 48x48 CNN inputs
+        (preprocessing strips with per-cell diagnostics)
+  narrative_figures/fig_walkthrough_05_recognize.png  cells -> recognized 9x9
+        (CNN + temperature, with per-cell confidence heatmap)
+  narrative_figures/fig_walkthrough_06_solve.png      recognized -> solution
+        (solve_with_resensing, node count)
+  narrative_figures/fig_walkthrough_07_overlay.png    solution -> deployed
+        overlay on the original photo (live-app look)
 
-Run as `python tools/make_pipeline_walkthrough.py [--image <path>] [--out <name>]`
+Run as `python tools/make_pipeline_walkthrough.py [--image <path>] [--out <prefix>]`
 from the repo root. Needs the final weights + temperature sidecar
 (models/digit_cnn.pth*). Exits NONZERO if the grid is not detected (no GT
 fallback - the walkthrough shows the honest deployed path).
@@ -135,7 +138,7 @@ def pick_cells(cells, grid):
     return [t[0] for t in (digit, empty, third) if t is not None]
 
 
-def grid_ax(ax, grid, title, fills=None, marks=None):
+def grid_ax(ax, grid, title, fills=None):
     """9x9 grid text panel: givens dark; `fills` cells teal (solution)."""
     ax.set_title(title, fontsize=10)
     ax.imshow(np.zeros((9, 9, 3), dtype=np.uint8))
@@ -151,17 +154,37 @@ def grid_ax(ax, grid, title, fills=None, marks=None):
             color = FILL if (fills is not None and fills[r, c]) else GIVEN
             ax.text(c, r, str(v), ha="center", va="center", fontsize=12,
                     fontweight="bold", color=color)
-            if marks is not None and marks[r, c]:
-                ax.text(c, r, "*", ha="left", va="top", fontsize=9, color="red")
     ax.set_xticks([])
     ax.set_yticks([])
+
+
+def transition_figure(left, right, step_title, code, note, out_name,
+                      left_title="before", right_title="after",
+                      figsize=(11, 5.2)):
+    """One small before->after figure with a big arrow between the panels."""
+    fig, (axl, axr) = plt.subplots(1, 2, figsize=figsize)
+    axl.imshow(left)
+    axl.set_title(left_title, fontsize=10)
+    axl.set_xticks([])
+    axl.set_yticks([])
+    axr.imshow(right)
+    axr.set_title(right_title, fontsize=10)
+    axr.set_xticks([])
+    axr.set_yticks([])
+    fig.text(0.5, 0.5, "→", ha="center", va="center", fontsize=28,
+             fontweight="bold", color="#555555")
+    fig.suptitle(f"{step_title} — {code}\n{note}", fontsize=12)
+    out = os.path.join(OUT, out_name)
+    fig.savefig(out, dpi=DPI, bbox_inches="tight")
+    plt.close(fig)
+    print("wrote", out)
 
 
 def main():
     parser = argparse.ArgumentParser(description="Visual pipeline walkthrough")
     parser.add_argument("--image", default=DEFAULT_IMAGE, help="input photo")
-    parser.add_argument("--out", default="fig_walkthrough_pipeline",
-                        help="output name (narrative_figures/<out>.png)")
+    parser.add_argument("--out", default="fig_walkthrough",
+                        help="output prefix (narrative_figures/<out>_NN_*.png)")
     args = parser.parse_args()
 
     import torch
@@ -198,15 +221,14 @@ def main():
     mosaic = np.vstack([np.hstack(cells[r * 9:(r + 1) * 9]) for r in range(9)])
     print(f"warp: {warped.shape[0]}x{warped.shape[1]}, 81 cells extracted")
 
-    # 5. recognition
+    # 5. recognition (before the strips: the empty picker uses the CNN read)
     probs = predict_cells_probs(cells, model, device=device,
                                 temperature=temperature)
     grid = probs.argmax(axis=1).reshape(9, 9)
     conf = probs.max(axis=1).reshape(9, 9)
     print("recognized grid:\n", grid)
 
-    # 4. preprocessing strips on representative cells (after recognition so
-    # the empty picker can use what the CNN actually read)
+    # 4. preprocessing strips on representative cells
     chosen = pick_cells(cells, grid)
     strips = [stage_strip(cells[i], f"cell ({i // 9},{i % 9})") for i in chosen]
     strips_stack = np.vstack(strips) if len(strips) > 1 else strips[0]
@@ -218,99 +240,113 @@ def main():
         lambda views: classify_preprocessed(views, model, device,
                                             temperature=temperature),
         stats=stats)
-    print(f"solve: ok={ok} nodes={stats.get('nodes', 0)} "
-          f"resensed={resensed}")
+    print(f"solve: ok={ok} nodes={stats.get('nodes', 0)} resensed={resensed}")
     if not ok:
         print("WARNING: no solution found for this photo (recognition errors)",
               file=sys.stderr)
 
-    # 7. deployed overlay (the live-app look)
+    # 7. deployed overlay
     overlay = annotate_frame(frame, quad_pts, grid, solved, ok)
-
-    # ------------------------------------------------------------- figure
     fills = np.zeros((9, 9), dtype=bool) if not ok else ((solved != 0) & (grid == 0))
-    fig = plt.figure(figsize=(15, 17))
-    gs = fig.add_gridspec(12, 2, height_ratios=[1.1, 0.5, 0.9, 0.5, 1.0, 1.0,
-                                                 1.0, 1.2, 0.7, 1.2, 0.7, 0.7],
-                          hspace=0.6, wspace=0.15)
-    fig.suptitle(f"Visual pipeline walkthrough — {os.path.basename(args.image)}\n"
-                 "each panel shows the image under the code that produced it "
-                 f"(T={temperature:.2f})",
-                 fontsize=13)
 
-    ax = fig.add_subplot(gs[0, :])
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    ax.imshow(rgb)
+    rgb_quad = rgb.copy()
     q = np.vstack([quad_pts, quad_pts[0]])
-    ax.plot(q[:, 0], q[:, 1], color="lime", lw=2.5)
-    ax.set_title("1  Input photo — green quad = detect_grid_contour() "
-                 "(adaptive threshold → largest 4-point contour)",
-                 fontsize=10)
-    ax.set_xticks([])
-    ax.set_yticks([])
+    cv2.polylines(rgb_quad, [q.astype(np.int32).reshape(-1, 1, 2)],
+                  False, (0, 255, 0), 3, cv2.LINE_AA)
+    rgb_overlay = cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB)
+    p = args.out
 
-    ax = fig.add_subplot(gs[1, 0])
-    ax.imshow(detmap, cmap="gray")
-    ax.set_title("detection map (thresholded)", fontsize=9)
-    ax.set_xticks([])
-    ax.set_yticks([])
+    # 1 -> 2 : photo -> detected quad
+    left = np.hstack([rgb, np.full((rgb.shape[0], 8, 3), 255, np.uint8),
+                      cv2.cvtColor(detmap, cv2.COLOR_GRAY2RGB)])
+    transition_figure(
+        left, rgb_quad,
+        "Step 1 → 2: grid detection", "detect_grid_contour() (sudoku_core.py:27)",
+        "adaptive threshold → morphological close → largest 4-point contour. "
+        "Left: the photo plus the thresholded detection map it runs on. "
+        "Right: the detected quad overlaid on the photo.",
+        f"{p}_01_detect.png", left_title="photo + detection map",
+        right_title="detected quad", figsize=(12, 5))
 
-    ax = fig.add_subplot(gs[1, 1])
-    ax.imshow(warped, cmap="gray")
-    ax.set_title("2  Perspective warp — four_point_transform() → "
-                 f"{SIZE}×{SIZE}", fontsize=9)
-    ax.set_xticks([])
-    ax.set_yticks([])
+    # 2 -> 3 : quad -> warp
+    transition_figure(
+        rgb_quad, warped,
+        "Step 2 → 3: perspective warp", "four_point_transform() (sudoku_core.py:19)",
+        "order_points() canonicalizes the corners; getPerspectiveTransform maps "
+        "them onto a flat 600×600 square, removing the photo's perspective.",
+        f"{p}_02_warp.png", left_title="detected quad",
+        right_title="warped 600×600 grid", figsize=(12, 5))
 
-    ax = fig.add_subplot(gs[2, :])
-    ax.imshow(mosaic, cmap="gray")
-    ax.set_title("3  81 row-major cells — extract_cells() (fractional "
-                 "boundaries, cell 0 = top-left)", fontsize=10)
-    ax.set_xticks([])
-    ax.set_yticks([])
+    # 3 -> 4 : warp -> cells
+    transition_figure(
+        warped, mosaic,
+        "Step 3 → 4: cell extraction", "extract_cells() (sudoku_core.py:103)",
+        "81 row-major cells cut at FRACTIONAL boundaries (i·h/9 rounded) so the "
+        "full warp is used — cell 0 is top-left, cell 80 bottom-right.",
+        f"{p}_03_cells.png", left_title="warped grid",
+        right_title="81 extracted cells (9×9 mosaic)", figsize=(12, 5))
 
-    ax = fig.add_subplot(gs[3:6, :])
-    ax.imshow(strips_stack, aspect="auto")
-    ax.set_xticks([])
-    ax.set_yticks([])
-    ax.set_title("4  Per-cell preprocessing — preprocess_cell_stats(): "
-                 "raw → blur → adaptive threshold → shape cleanup → "
-                 "letterboxed 48×48 input (diagnostics bar below each strip)",
-                 fontsize=10, loc="left")
+    # 4 -> 5 : cells -> preprocessed inputs
+    raws = [cv2.cvtColor(r, cv2.COLOR_GRAY2BGR) if r.ndim == 2 else r
+            for r in (show(cells[i], size=150) for i in chosen)]
+    rh = max(r.shape[0] for r in raws)
+    raws = [np.vstack([r, np.full((rh - r.shape[0], r.shape[1], 3), 255, np.uint8)])
+            if r.shape[0] < rh else r for r in raws]
+    raw_pair = np.hstack(raws)
+    transition_figure(
+        raw_pair, strips_stack,
+        "Step 4 → 5: per-cell preprocessing", "preprocess_cell_stats() (digit_cnn.py:912)",
+        "each cell: Gaussian blur → adaptive threshold → shape cleanup → "
+        "letterboxed 48×48. The diagnostics bars list the statistics the "
+        "cleanup rules use (th_ink, components, largest fraction, removals).",
+        f"{p}_04_preprocess.png", left_title="raw cells (digit + empty)",
+        right_title="preprocessing stages + diagnostics", figsize=(13, 5.5))
 
-    ax = fig.add_subplot(gs[7, 0])
-    grid_ax(ax, grid, "5a  Recognized 9×9 — predict_cells_probs() + argmax")
-    ax = fig.add_subplot(gs[7, 1])
-    im = ax.imshow(conf, cmap="viridis", vmin=0, vmax=1)
-    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    ax.set_title("5b  Per-cell confidence (max softmax, T-scaled)",
-                 fontsize=10)
-    ax.set_xticks([])
-    ax.set_yticks([])
-
-    ax = fig.add_subplot(gs[9, 0])
-    grid_ax(ax, solved, f"6  Solution — solve_with_resensing()  "
-            f"(nodes={stats.get('nodes', 0):,}, resensed={resensed})",
-            fills=fills)
-    ax = fig.add_subplot(gs[9, 1])
-    ax.imshow(cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB))
-    ax.set_title("7  Deployed overlay — the live app look: white = recognized "
-                 "given, yellow = solver-filled", fontsize=10)
-    ax.set_xticks([])
-    ax.set_yticks([])
-
-    # status footer
-    ax = fig.add_subplot(gs[11, :])
-    ax.axis("off")
-    status = (f"solve ok={ok}  nodes={stats.get('nodes', 0):,}  "
-              f"resensed={resensed}  temperature={temperature:.2f}")
-    ax.text(0.5, 0.5, status, ha="center", va="center", fontsize=10,
-            color="#2e7d32" if ok else "#c62828")
-
-    out = os.path.join(OUT, f"{args.out}.png")
+    # 5 -> 6 : cells -> recognized grid
+    fig, (axl, axr) = plt.subplots(1, 2, figsize=(11, 5.2))
+    axl.imshow(mosaic, cmap="gray")
+    axl.set_title("cells", fontsize=10)
+    axl.set_xticks([])
+    axl.set_yticks([])
+    grid_ax(axr, grid, f"recognized 9×9  (T={temperature:.2f})")
+    fig.text(0.5, 0.5, "→", ha="center", va="center", fontsize=28,
+             fontweight="bold", color="#555555")
+    fig.suptitle("Step 5 → 6: recognition — predict_cells_probs() "
+                 "(digit_cnn.py:442)\n81 cells → 81×10 temperature-scaled "
+                 "softmax → argmax per cell → recognized grid",
+                 fontsize=11)
+    out = os.path.join(OUT, f"{p}_05_recognize.png")
     fig.savefig(out, dpi=DPI, bbox_inches="tight")
     plt.close(fig)
     print("wrote", out)
+
+    # 6 -> 7 : recognized -> solution
+    fig, (axl, axr) = plt.subplots(1, 2, figsize=(11, 5.2))
+    grid_ax(axl, grid, "recognized 9×9")
+    grid_ax(axr, solved,
+            f"solution — solve_with_resensing()  "
+            f"(nodes={stats.get('nodes', 0):,}, resensed={resensed})",
+            fills=fills)
+    fig.text(0.5, 0.5, "→", ha="center", va="center", fontsize=28,
+             fontweight="bold", color="#555555")
+    fig.suptitle("Step 6 → 7: solving — confidence-aware correction search\n"
+                 "dark = recognized givens, teal = solver fills; the node "
+                 "count is the corruption diagnostic",
+                 fontsize=11)
+    out = os.path.join(OUT, f"{p}_06_solve.png")
+    fig.savefig(out, dpi=DPI, bbox_inches="tight")
+    plt.close(fig)
+    print("wrote", out)
+
+    # 7 -> 8 : solution -> deployed overlay
+    transition_figure(
+        solved, rgb_overlay,
+        "Step 7 → 8: deployed overlay", "annotate_frame() (live_solver.py:61)",
+        "the live-app look painted on the ORIGINAL photo: white = recognized "
+        "givens, yellow = solver-filled cells, at the true cell centers.",
+        f"{p}_07_overlay.png", left_title="solution grid",
+        right_title="overlay on the original photo", figsize=(12, 5))
     return 0
 
 
