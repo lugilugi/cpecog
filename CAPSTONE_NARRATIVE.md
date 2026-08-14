@@ -81,6 +81,26 @@ The single most important architectural decision is that **training data and inf
 
 The pipeline is deployed as a real-time Tkinter GUI (`live_solver.py`): point a webcam at a printed puzzle — or upload a photo — and the app solves it live, roughly 3–4 passes per second. Three background threads keep the UI responsive: the model loads on one (weights plus the temperature sidecar, off the UI thread), capture runs on a second (DirectShow on Windows — MSMF leaks frame buffers with some drivers), and solving on a third with a **busy-gate** that guarantees at most one frame is in flight or pending, so the queue can never pile up while a slow pass runs. The preview overlays the detection result directly on the photo: the green quad is the detected grid, **white digits are recognized givens, yellow digits are cells the solver filled** — both drawn at the true bilinear cell centers of the warp. The side panel shows the Recognized and Solution 9×9 grids in 3×3 boxes, populated row-major so every label lines up with the overlay cell-for-cell. This "recognition painted on the photo" view is also an honest diagnostic: what the CNN actually read is visible at every cell — including its errors — instead of being hidden behind the printed digits. A `--smoke` flag solves one sample image and exits 0/1, giving the whole pipeline a CI-able health check.
 
+### 3.2 A visual walkthrough of the pipeline
+
+The figure below is a code tour: one real photograph (`benchmark_data/hf_test_sample`) run through the *actual* pipeline functions, with each panel showing what the image looks like at that stage and naming the code that produced it. Regenerate it for any photo with `python tools/make_pipeline_walkthrough.py --image <path> [--out <name>]` (exits nonzero if the grid is not detected — no ground-truth fallback, matching the honest end-to-end convention).
+
+![Visual pipeline walkthrough](narrative_figures/fig_walkthrough_pipeline.png)
+
+*Figure W1. A real photo through every pipeline stage: detected quad → perspective warp → 81 extracted cells → per-cell preprocessing strips with diagnostics → recognized grid + confidence heatmap → solution → the deployed overlay.*
+
+| Panel | Code | What to look for |
+|---|---|---|
+| 1 — Input + quad | `detect_grid_contour()` (sudoku_core.py:27) | The green quad: adaptive threshold (block 15, constant 5, inverted) → morphological close → largest external contour → 4-point approximation. The detection map beside it is the thresholded image the contour search runs on |
+| 2 — Warp | `four_point_transform()` (sudoku_core.py:19) | The flat 600×600 top-down grid produced from the quad corners (`order_points` + perspective transform) — the photo's perspective is removed here |
+| 3 — Cells | `extract_cells()` (sudoku_core.py:103) | The 9×9 mosaic of the 81 row-major cells, cut at *fractional* boundaries (`i·h/9` rounded) so every pixel of the warp is used |
+| 4 — Preprocessing strips | `preprocess_cell_stats()` (digit_cnn.py:912) | Two representative cells through the five exposed stages — raw → Gaussian blur → adaptive threshold → shape cleanup → letterboxed 48×48 input — with a diagnostics bar under each |
+| 5 — Recognition | `predict_cells_probs()` (digit_cnn.py:442) | The recognized 9×9 (argmax of the 81×10 softmax, temperature-scaled) plus a per-cell confidence heatmap |
+| 6 — Solution | `solve_with_resensing()` (sudoku_core.py) | The completed grid — dark cells are recognized givens, teal cells are solver fills — with node count and re-sense count |
+| 7 — Deployed overlay | `annotate_frame()` (live_solver.py:61) | The live-app look: white = recognized givens, yellow = solver-filled cells, painted on the original photo |
+
+**Reading the diagnostics bars** (panel 4): each strip's footer lists the per-cell statistics the cleanup rules are built on. `th_ink` is the thresholded foreground fraction *before* cleanup; `comps` is the number of connected components after the margin strip; `largest` is the biggest component's share of the cell; `tiny/grid/corner` are the shape-rule removal counts; `merged` flags a split-stroke bridge. The empty-cell strip shows the cleanup's job directly: it *starts* with 16% raw fragment ink (threshold artifact of the printed grid lines) and *ends* as a black 48×48 input — the CNN is told "empty", not shown fragments. The digit strip keeps its ink end-to-end. Section 5.2/5.3 explain why each of these statistics exists; this figure shows them on real data.
+
 ## 4. Evaluation Methodology
 
 All claims in this document come from `benchmark.py`, which evaluates labeled datasets in two separately-labeled modes:
@@ -478,6 +498,7 @@ The figures below explain the classical techniques and machine-learning concepts
 | `narrative_figures/ref_r*.png` | intro-ML reference figures R1–R7 (thresholding, calibration, training history, architecture, augmentation, data balance, empties) | §8.3 |
 | `emnist/photo_packed_test.npz` | sealed-test definite-cell cache (11,414 cells) — built by `make_reference_figures.py` via `photo_data.build_photo_cells("test")` | §5.6, R2 |
 | `live_solver.py` | real-time GUI deployment of the pipeline (camera/upload, overlay + panels, `--smoke` health check) | §3.1 |
+| `narrative_figures/fig_walkthrough_pipeline.png` + `tools/make_pipeline_walkthrough.py` | the §3.2 visual code tour: one photo through every pipeline stage with per-stage diagnostics | §3.2 |
 
 ---
 
